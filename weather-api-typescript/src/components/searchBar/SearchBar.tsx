@@ -1,5 +1,5 @@
 import { Autocomplete } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import "./searchBar.css";
 import IconButton from "@mui/material/IconButton";
@@ -11,23 +11,34 @@ import {
   fetchWeatherByZipcode,
 } from "../../store/slices/weatherDataslice";
 import { useAppDispatch } from "../../store/hooks";
-const top3Cities = ["Islamabad", "Lahore", "Multan"];
-const filters = ["CityName", "City ID", "Zip Code"];
+
+
+
+const TOP_CITIES = ["Islamabad", "Lahore", "Multan"];
+const FILTERS = ["CityName", "City ID", "Zip Code"];
 const SearchBar = () => {
-  const [value, setValue] = React.useState<string | null>(top3Cities[0]); //handling input value
-  const [filterType, setFilterType] = React.useState<string | null>(filters[0]); //handling filter type e.g., zipcode
+  const [query, setQuery] = React.useState<string | null>(TOP_CITIES[0]); //handling input query
+  const [filterType, setFilterType] = React.useState<string | null>(FILTERS[0]); //handling filter type e.g., zipcode
 
   const dispatch = useAppDispatch();
 
   //handling filter and calling method according to filterType
   const handlingFilter = () => {
-    if (filterType === "CityName") {
-      dispatch(fetchWeatherByName(value));
-    } else if (filterType === "City ID") {
-      dispatch(fetchWeatherByZipcode(value));
-    } else {
-      dispatch(fetchWeatherByZipcode(value));
+    switch(filterType) {
+      case "CityName":
+        dispatch(fetchWeatherByName(query));
+        // code block
+        break ;
+      case "City ID":
+        dispatch(fetchWeatherByZipcode(query));
+        // code block
+        break;
+      default:
+        dispatch(fetchWeatherByZipcode(query));
+
+        // code block
     }
+    
   };
 
   return (
@@ -37,7 +48,7 @@ const SearchBar = () => {
         disablePortal
         id="combo-box-demo"
         freeSolo
-        options={filters}
+        options={FILTERS}
         onChange={(event: any, newValue: string | null) => {
           setFilterType(newValue);
         }}
@@ -47,23 +58,23 @@ const SearchBar = () => {
 
       {/*end************ */}
 
-      {/*this is for getting input value */}
+      {/*this is for getting input query */}
 
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={top3Cities}
+        options={TOP_CITIES}
         freeSolo
         onChange={(event: any, newValue: string | null) => {
-          setValue(newValue);
+          setQuery(newValue);
         }}
         sx={{
           width: "60%",
         }}
         onInputChange={(event, newInputValue) => {
-          setValue(newInputValue);
+          setQuery(newInputValue);
         }}
-        renderInput={(params) => <TextField {...params} label={value} />}
+        renderInput={(params) => <TextField {...params} label={query} />}
       />
 
       {/*end************ */}

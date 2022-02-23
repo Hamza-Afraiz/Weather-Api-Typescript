@@ -45,13 +45,45 @@ export const fetchWeatherByZipcode = createAsyncThunk(
 );
 // Define a type for the slice state
 
+const changeToFahrenheit = (
+  item: WeatherData,
+  index: number,
+  weatherArray: WeatherData[]
+) => {
+  let temperatureMax = item.tempMax!;
+  let temperatureMin = item.tempMin!;
+  weatherArray[index].tempMax = temperatureMax * (9 / 5) + 32;
+  weatherArray[index].tempMin = temperatureMin * (9 / 5) + 32;
+};
+const changeToCelcius = (
+  item: WeatherData,
+  index: number,
+  weatherArray: WeatherData[]
+) => {
+  let temperatureMax = item.tempMax!;
+  let temperatureMin = item.tempMin!;
+  weatherArray[index].tempMax = (temperatureMax - 32) * (5 / 9);
+  weatherArray[index].tempMin = (temperatureMin - 32) * (5 / 9);
+};
 export const WeatherDataSlice = createSlice({
   name: "weather",
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     ChangeTemperatureUnit(state, action) {
-      tempUnit = action.payload;
+      if (action.payload === "imperial" && tempUnit === "metric") {
+        const existingUsers = JSON.parse(JSON.stringify(state.weatherData));
+
+        existingUsers.forEach(changeToFahrenheit);
+        state.weatherData = existingUsers;
+        tempUnit = action.payload;
+      } else if (action.payload === "metric" && tempUnit === "imperial") {
+        const existingUsers = JSON.parse(JSON.stringify(state.weatherData));
+
+        existingUsers.forEach(changeToCelcius);
+        state.weatherData = existingUsers;
+        tempUnit = action.payload;
+      }
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
   },

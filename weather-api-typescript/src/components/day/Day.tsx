@@ -1,5 +1,5 @@
 import React from "react";
-import "./oneInFiveDay.css";
+import "./day.css";
 const clear = require("../../assets/images/clear.PNG");
 
 const rain = require("../../assets/images/rain.PNG");
@@ -10,7 +10,7 @@ interface oneInFiveDayProps {
   weatherType: string | undefined;
   day: string | undefined;
 }
-const OneInFiveDay = ({
+const Day = ({
   weatherType,
   tempMax,
   tempMin,
@@ -32,10 +32,10 @@ const OneInFiveDay = ({
         />
       </div>
       <div>
-        {tempMin} ` {tempMax} `
+        {Math.trunc(tempMin!)} ` {Math.trunc(tempMax!)} `
       </div>
     </div>
   );
 };
 
-export default OneInFiveDay;
+export default Day;
